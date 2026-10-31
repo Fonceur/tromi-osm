@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="hand-written test fixture">
+  <!-- Fuel node: `brand` and `amenity` must not reach the file. -->
+  <node id="1" version="1" lat="45.5" lon="-73.6">
+    <tag k="amenity" v="fuel"/>
+    <tag k="brand" v="Esso"/>
+    <tag k="name" v="Station Un"/>
+    <tag k="shop" v="convenience"/>
+    <tag k="car_wash" v="yes"/>
+    <tag k="atm" v="no"/>
+    <tag k="food" v="yes"/>
+    <tag k="cuisine" v="sandwich"/>
+    <tag k="compressed_air" v="yes"/>
+  </node>
+
+  <!-- Way 1, a lopsided triangle: bounding-box centre (45.05, -73.15), mean (45.0667, -73.1). -->
+  <node id="11" version="1" lat="45.0" lon="-73.0"/>
+  <node id="12" version="1" lat="45.1" lon="-73.0"/>
+  <node id="13" version="1" lat="45.1" lon="-73.3"/>
+  <way id="1" version="1">
+    <nd ref="11"/><nd ref="12"/><nd ref="13"/><nd ref="11"/>
+    <tag k="amenity" v="fuel"/>
+    <tag k="name" v="Station Deux"/>
+  </way>
+
+  <!-- Relation 1: untagged member ways, outer and inner. Centre (46.1, -72.2). -->
+  <node id="21" version="1" lat="46.0" lon="-72.0"/>
+  <node id="22" version="1" lat="46.0" lon="-72.4"/>
+  <node id="23" version="1" lat="46.2" lon="-72.4"/>
+  <node id="24" version="1" lat="46.1" lon="-72.1"/>
+  <node id="25" version="1" lat="46.1" lon="-72.2"/>
+  <node id="26" version="1" lat="46.15" lon="-72.2"/>
+  <way id="2" version="1">
+    <nd ref="21"/><nd ref="22"/><nd ref="23"/><nd ref="21"/>
+  </way>
+  <way id="3" version="1">
+    <nd ref="24"/><nd ref="25"/><nd ref="26"/><nd ref="24"/>
+  </way>
+  <relation id="1" version="1">
+    <member type="way" ref="2" role="outer"/>
+    <member type="way" ref="3" role="inner"/>
+    <tag k="type" v="multipolygon"/>
+    <tag k="amenity" v="fuel"/>
+    <tag k="name" v="Station Trois"/>
+  </relation>
+
+  <!-- Relation 2: nodes only, like the real Harnois in Coaticook (relation 17512587).
+       Area assembly can't build it, but Overpass still gave it a centre: (47.1, -71.1). -->
+  <node id="31" version="1" lat="47.0" lon="-71.0"/>
+  <node id="32" version="1" lat="47.2" lon="-71.2"/>
+  <relation id="2" version="1">
+    <member type="node" ref="31" role="inner"/>
+    <member type="node" ref="32" role="inner"/>
+    <tag k="type" v="multipolygon"/>
+    <tag k="amenity" v="fuel"/>
+    <tag k="name" v="Harnois"/>
+  </relation>
+
+  <!-- Relation 3: its member is way 40. Node 40 is unrelated and must not widen the box. -->
+  <node id="40" version="1" lat="10.0" lon="10.0"/>
+  <node id="41" version="1" lat="48.0" lon="-70.0"/>
+  <node id="42" version="1" lat="48.0" lon="-70.2"/>
+  <node id="43" version="1" lat="48.2" lon="-70.2"/>
+  <way id="40" version="1">
+    <nd ref="41"/><nd ref="42"/><nd ref="43"/><nd ref="41"/>
+  </way>
+  <relation id="3" version="1">
+    <member type="way" ref="40" role="outer"/>
+    <tag k="type" v="multipolygon"/>
+    <tag k="amenity" v="fuel"/>
+  </relation>
+
+  <!-- Relation 4: its only member isn't in the extract, so it has no position. -->
+  <relation id="4" version="1">
+    <member type="way" ref="999" role="outer"/>
+    <tag k="type" v="multipolygon"/>
+    <tag k="amenity" v="fuel"/>
+  </relation>
+
+  <!-- The three visitor-centre forms the app's query asks for, on nodes and ways. -->
+  <node id="101" version="1" lat="49.0" lon="-69.0">
+    <tag k="tourism" v="visitor_centre"/>
+    <tag k="name" v="Centre de découverte"/>
+    <tag k="website" v="https://example.invalid"/>
+  </node>
+  <node id="102" version="1" lat="49.1" lon="-69.1">
+    <tag k="tourism" v="information"/>
+    <tag k="information" v="visitor_centre"/>
+    <tag k="name" v="Accueil"/>
+  </node>
+  <node id="103" version="1" lat="49.2" lon="-69.2">
+    <tag k="information" v="office"/>
+  </node>
+  <node id="51" version="1" lat="49.3" lon="-69.3"/>
+  <node id="52" version="1" lat="49.3" lon="-69.5"/>
+  <node id="53" version="1" lat="49.5" lon="-69.5"/>
+  <way id="104" version="1">
+    <nd ref="51"/><nd ref="52"/><nd ref="53"/><nd ref="51"/>
+    <tag k="tourism" v="information"/>
+    <tag k="information" v="office"/>
+    <tag k="name" v="Bureau"/>
+  </way>
+
+  <!-- Left out: the query needs tourism=information beside information=visitor_centre. -->
+  <node id="105" version="1" lat="49.6" lon="-69.6">
+    <tag k="information" v="visitor_centre"/>
+  </node>
+  <!-- Left out: other information points, and other amenities. -->
+  <node id="106" version="1" lat="49.7" lon="-69.7">
+    <tag k="tourism" v="information"/>
+    <tag k="information" v="guidepost"/>
+  </node>
+  <node id="107" version="1" lat="49.8" lon="-69.8">
+    <tag k="amenity" v="cafe"/>
+  </node>
+  <!-- Left out: the query covers nodes and ways only, unlike the fuel query. -->
+  <relation id="5" version="1">
+    <member type="way" ref="2" role="outer"/>
+    <tag k="type" v="multipolygon"/>
+    <tag k="tourism" v="visitor_centre"/>
+  </relation>
+</osm>

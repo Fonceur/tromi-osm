@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Tromi OSM amenities, version 1",
+  "type": "object",
+  "required": ["schema", "region", "osm_timestamp", "license", "attribution", "fuel", "visitor_centres"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {"const": 1},
+    "region": {"type": "string", "pattern": "^[a-z]{2}$"},
+    "osm_timestamp": {"type": "string"},
+    "license": {"const": "ODbL-1.0"},
+    "attribution": {"const": "© OpenStreetMap contributors"},
+    "fuel": {
+      "type": "array",
+      "items": {
+        "allOf": [{"$ref": "#/$defs/element"}],
+        "properties": {
+          "tags": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "name": {"type": "string"},
+              "car_wash": {"type": "string"},
+              "shop": {"type": "string"},
+              "atm": {"type": "string"},
+              "food": {"type": "string"},
+              "cuisine": {"type": "string"},
+              "compressed_air": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "visitor_centres": {
+      "type": "array",
+      "items": {
+        "allOf": [{"$ref": "#/$defs/element"}],
+        "properties": {
+          "type": {"enum": ["node", "way"]},
+          "tags": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {"name": {"type": "string"}}
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "element": {
+      "type": "object",
+      "required": ["type", "id", "lat", "lon", "tags"],
+      "properties": {
+        "type": {"enum": ["node", "way", "relation"]},
+        "id": {"type": "integer", "minimum": 1},
+        "lat": {"type": "number", "minimum": -90, "maximum": 90},
+        "lon": {"type": "number", "minimum": -180, "maximum": 180},
+        "tags": {"type": "object"}
+      }
+    }
+  }
+}

@@ -1,0 +1,54 @@
+name: Build extract
+
+# Once a week: Geofabrik warns that abusive clients get whole IP ranges blocked, and
+# GitHub runners share theirs. Off the hour on purpose, because GitHub delays or
+# drops scheduled runs under load, worst at the top of the hour. A dropped run only
+# ages the file by another week.
+on:
+  schedule:
+    - cron: "43 7 * * 2"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install
+        run: pip install -r requirements.txt
+
+      - name: Unit tests
+        run: python -m unittest discover -s tests
+
+      # Exits non-zero below a floor, so nothing below this step runs and Pages keeps
+      # serving the last good file.
+      - name: Build
+        run: python build.py
+
+      # Weekly commits also keep the schedule alive past GitHub's 60-day rule.
+      - name: Publish
+        run: |
+          git add data
+          if git diff --cached --quiet; then
+            echo "Nothing to publish."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -q -m "amenities: $(python -c "import json; print(json.load(open('data/qc/amenities.json'))['osm_timestamp'])")"
+          git pull -q --rebase
+          git push -q
