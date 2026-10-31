@@ -54,7 +54,7 @@ them here too.
 pip install -r requirements.txt
 python -m unittest discover -s tests
 python build.py                     # downloads each extract, about 1.2 GB for Québec
-python build.py --pbf-dir <dir>     # reuses extracts already in <dir>, named as Geofabrik names them
+python build.py --pbf-dir <dir>     # reuses extracts already in <dir>, named like quebec.osm.pbf
 ```
 
 ## Adding a region
