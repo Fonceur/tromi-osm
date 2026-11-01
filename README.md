@@ -1,6 +1,6 @@
 # tromi-osm
 
-The OpenStreetMap data behind [Tromi](https://play.google.com/store/apps/details?id=ca.romi.tromi),
+The OpenStreetMap data behind [Tromi](https://fonceur.github.io/tromi/),
 a Québec gas-price app: fuel stations and visitor centres, published as a static file so the
 app doesn't have to query the public Overpass API from every install.
 
